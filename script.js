@@ -4,8 +4,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('lightbox-close');
   const prevBtn = document.getElementById('lightbox-prev');
   const nextBtn = document.getElementById('lightbox-next');
+  const menuIcon = document.getElementById('menu-icon');
+  const navbar = document.querySelector('.navbar');
 
   if (!lightbox || !lightboxImg || !closeBtn) return;
+
+  // Mobile menu toggle: open/close nav panel, close on link click or resize
+  if (menuIcon && navbar) {
+    // set accessibility hints
+    menuIcon.setAttribute('role', 'button');
+    menuIcon.setAttribute('aria-controls', 'main-nav');
+    menuIcon.setAttribute('aria-expanded', 'false');
+    menuIcon.addEventListener('click', () => {
+      navbar.classList.toggle('open');
+      const isOpen = navbar.classList.contains('open');
+      menuIcon.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    navbar.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        if (navbar.classList.contains('open')) {
+          navbar.classList.remove('open');
+          menuIcon.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900 && navbar.classList.contains('open')) {
+        navbar.classList.remove('open');
+        menuIcon.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 
   // Per-card carousel initialization
   document.querySelectorAll('.journal-carousel').forEach(carousel => {
