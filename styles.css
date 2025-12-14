@@ -38,6 +38,14 @@ body{
     color: var(--main-color);
     display: none;
 }
+
+#menu-icon:focus{
+    outline: 3px solid rgba(234,88,12,0.18);
+    outline-offset: 4px;
+    border-radius: 0.4rem;
+}
+
+body.nav-open{ overflow: hidden; }
 .logo{
     font-size: 3rem;
     color: var(--text-color);
@@ -125,6 +133,12 @@ section:not(:first-of-type){
         transition: right 0.28s ease;
     }
     .navbar.open{ right: 0; }
+        /* Improve touch target for nav links */
+        .navbar a{ padding: 1rem 1.6rem; width: 100%; text-align: center; }
+        .navbar a:focus{ outline: 2px solid rgba(255,255,255,0.06); outline-offset: 2px; }
+        /* Overlay that appears under the mobile nav */
+        #nav-overlay{ position: fixed; inset: 0; background: rgba(0,0,0,0.46); opacity: 0; visibility: hidden; transition: opacity 0.22s ease; z-index: 1400; }
+        #nav-overlay.active{ opacity: 1; visibility: visible; }
     .navbar a{ font-size: 2.6rem; margin-left: 0; display: block; }
     .gradient-btn{ display: none; }
     .home{ flex-direction: column-reverse; gap: 2.6rem; padding-top: 8rem; }
@@ -145,6 +159,7 @@ section:not(:first-of-type){
     .header{ padding: 1rem 3%; }
     .logo{ font-size: 2rem; }
     .navbar{ width: 85%; }
+    section{ padding: 6.5rem 5%; }
     .home-img img{ width: 78vw; }
     .home-content h1{ font-size: 3.8rem; }
     .home-content h3{ font-size: 2.2rem; }
