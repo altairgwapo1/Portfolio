@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.remove('nav-open');
       menuIcon.setAttribute('aria-expanded', 'false');
       navbar.setAttribute('aria-hidden', 'true');
+      // restore icon and aria label
+      menuIcon.classList.remove('bx-x');
+      menuIcon.classList.add('bx-menu');
+      menuIcon.setAttribute('aria-label', 'Open menu');
       menuIcon.focus();
     }
 
@@ -41,6 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.add('nav-open');
       menuIcon.setAttribute('aria-expanded', 'true');
       navbar.setAttribute('aria-hidden', 'false');
+      // switch icon to close and update aria label
+      menuIcon.classList.remove('bx-menu');
+      menuIcon.classList.add('bx-x');
+      menuIcon.setAttribute('aria-label', 'Close menu');
       // focus first link for keyboard users
       const firstLink = navbar.querySelector('a');
       if (firstLink) firstLink.focus();
@@ -55,7 +63,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     navbar.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => { if (navbar.classList.contains('open')) closeNav(); });
+      a.addEventListener('click', (ev) => {
+        const href = a.getAttribute('href') || '';
+        // handle same-page anchors with smooth scroll
+        if (href.startsWith('#')){
+          ev.preventDefault();
+          const target = document.querySelector(href);
+          if (target){
+            closeNav();
+            setTimeout(() => { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 90);
+          }
+          return;
+        }
+        // external link or different page: close nav and allow navigation to proceed
+        if (navbar.classList.contains('open')) closeNav();
+      });
+    });
+
+    // Footer nav anchors (same behavior for single-page footer links)
+    document.querySelectorAll('.footer-nav a').forEach(a => {
+      a.addEventListener('click', (ev) => {
+        const href = a.getAttribute('href') || '';
+        if (href.startsWith('#')){
+          ev.preventDefault();
+          const target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
     });
 
     navOverlay.addEventListener('click', () => { if (navbar.classList.contains('open')) closeNav(); });
